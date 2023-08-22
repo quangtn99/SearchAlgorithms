@@ -1,0 +1,97 @@
+def can_place(board, shape, x, y):
+    """
+    Kiểm tra xem một hình có thể đặt được vào bảng tại vị trí (x, y) không.
+    """
+    n = len(board)
+    m = len(board[0])
+    shape_height = len(shape)
+    shape_width = len(shape[0])
+
+    for i in range(shape_height):
+        for j in range(shape_width):
+            if shape[i][j] == 1:
+                if (x + i >= n or y + j >= m or board[x + i][y + j] == 1):
+                    return False
+    return True
+
+
+def place_shape(board, shape, x, y):
+    """
+    Đặt hình vào bảng tại vị trí (x, y).
+    """
+    shape_height = len(shape)
+    shape_width = len(shape[0])
+
+    for i in range(shape_height):
+        for j in range(shape_width):
+            if shape[i][j] == 1:
+                board[x + i][y + j] = 1
+
+
+def remove_shape(board, shape, x, y):
+    """
+    Xóa hình khỏi bảng tại vị trí (x, y).
+    """
+    shape_height = len(shape)
+    shape_width = len(shape[0])
+
+    for i in range(shape_height):
+        for j in range(shape_width):
+            if shape[i][j] == 1:
+                board[x + i][y + j] = 0
+
+
+def solve_puzzle(board, shapes, current_shape_index):
+    """
+    Giải bài toán xếp hình bằng phương pháp quay lui.
+    """
+    if current_shape_index == len(shapes):
+        # Tìm được một cách xếp hình thành công
+        return True
+
+    shape = shapes[current_shape_index]
+    n = len(board)
+    m = len(board[0])
+
+    for i in range(n):
+        for j in range(m):
+            if can_place(board, shape, i, j):
+                place_shape(board, shape, i, j)
+
+                if solve_puzzle(board, shapes, current_shape_index + 1):
+                    return True
+
+                remove_shape(board, shape, i, j)
+
+    return False
+
+
+# Ví dụ sử dụng chương trình
+
+# Kích thước bảng
+n = 4
+m = 5
+
+# Các hình cần xếp
+shapes = [
+    [[1, 1],
+     [1, 0],
+     [1, 0]],
+     
+    [[1, 1, 1],
+     [0, 1, 0]],
+     
+    [[0, 1, 1],
+     [1, 1, 0]]
+]
+
+# Tạo bảng
+board = [[0 for _ in range(m)] for _ in range(n)]
+
+# Giải bài toán xếp hình
+if solve_puzzle(board, shapes, 0):
+    print("Có cách xếp hình thành công:")
+    for row in board:
+        print(row)
+else:
+    print("Không tìm thấy cách xếp hình.")

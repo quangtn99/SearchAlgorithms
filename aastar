@@ -1,0 +1,90 @@
+import heapq
+
+
+def heuristic(node, goal):
+    """
+    Hàm heuristic để ước tính chi phí từ node đến goal.
+    Trong ví dụ này, chúng ta sử dụng khoảng cách Manhattan.
+    """
+    return abs(node[0] - goal[0]) + abs(node[1] - goal[1])
+
+
+def astar(start, goal, graph):
+    """
+    Hàm thực hiện thuật toán A* để tìm đường đi từ start đến goal trong graph.
+    """
+    # Khởi tạo các tập hợp và biến cần thiết
+    open_set = []  # Tập các nút mà chúng ta đã khám phá nhưng chưa xét đến
+    closed_set = set()  # Tập các nút mà chúng ta đã xét
+    came_from = {}  # Dùng để lưu trữ nút cha của mỗi nút
+    g_score = {start: 0}  # Chi phí từ start đến mỗi nút
+    f_score = {start: heuristic(start, goal)}  # Tổng chi phí ước tính từ start đến goal
+
+    # Đưa start vào open_set với f_score là ước tính ban đầu
+    heapq.heappush(open_set, (f_score[start], start))
+
+    while open_set:
+        current = heapq.heappop(open_set)[1]
+
+        if current == goal:
+            # Đã tìm thấy đường đi từ start đến goal
+            path = reconstruct_path(came_from, current)
+            return path
+
+        closed_set.add(current)
+
+        for neighbor in graph[current]:
+            # Tính toán chi phí mới từ start đến neighbor
+            tentative_g_score = g_score[current] + graph[current][neighbor]
+
+            if neighbor in closed_set and tentative_g_score >= g_score.get(neighbor, float('inf')):
+                continue
+
+            if tentative_g_score < g_score.get(neighbor, float('inf')):
+                came_from[neighbor] = current
+                g_score[neighbor] = tentative_g_score
+                f_score[neighbor] = tentative_g_score + heuristic(neighbor, goal)
+
+                if neighbor not in closed_set:
+                    heapq.heappush(open_set, (f_score[neighbor], neighbor))
+
+    return None  # Không tìm thấy đường đi
+
+
+def reconstruct_path(came_from, current):
+    """
+    Tái tạo đường đi từ came_from dict.
+    """
+    path = [current]
+
+    while current in came_from:
+        current = came_from[current]
+        path.append(current)
+
+    path.reverse()
+    return path
+
+
+# Ví dụ sử dụng chương trình
+
+# Đồ thị biểu diễn bằng dict
+# Trong ví dụ này, chúng ta sử dụng đồ thị vô hướng với trọng số
+graph = {
+    'A': {'B': 5, 'D': 3},
+    'B': {'A': 5, 'C': 2},
+    'C': {'B': 2, 'D': 1, 'E': 4},
+    'D': {'A': 3, 'C': 1, 'E': 2},
+    'E': {'C': 4, 'D': 2}
+}
+
+start_node = 'A'
+goal_node = 'E'
+
+# Tìm đường đi từ start_node đến goal_node bằng thuật toán A*
+path = astar(start_node, goal_node, graph)
+
+if path:
+    print("Đường đi từ", start_node, "đến", goal_node, ":")
+    print(" -> ".join(path))
+else:
+    print("Không tìm thấy đường đi từ", start_node, "đến", goal_node)

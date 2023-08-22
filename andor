@@ -1,0 +1,40 @@
+def solvable(u, graph):
+    if u in graph['end']:  # Check if u is a goal state
+        return True
+
+    if u not in graph:  # Check if u is not a valid state or node
+        return False
+
+    for R in graph['operators']:
+        ok = True
+        for v in graph['neighbors'][u][R]:
+            if not solvable(v, graph):
+                ok = False
+                break
+        if ok:
+            return True
+
+    return False
+
+# Example usage:
+graph = {
+    'end': {9},  # Set of goal states
+    'operators': ['+', '-'],  # List of available operators
+    'neighbors': {
+        1: {'+': [2, 3], '-': [4]},  # Neighbors for each operator at node 1
+        2: {'+': [5], '-': [6]},
+        3: {'+': [6, 7], '-': [8]},
+        4: {'+': [8], '-': [9]},
+        5: {'+': [9], '-': []},
+        6: {'+': [], '-': []},
+        7: {'+': [], '-': []},
+        8: {'+': [], '-': []},
+        9: {'+': [], '-': []},
+    }
+}
+
+start_node = 1
+if solvable(start_node, graph):
+    print("The problem is solvable.")
+else:
+    print("The problem is not solvable.")

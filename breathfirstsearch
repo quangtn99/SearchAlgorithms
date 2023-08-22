@@ -1,0 +1,25 @@
+from queue import Queue
+
+def is_square_number(num):
+    return num == int(num**0.5)**2
+
+def bfs_square_numbers(limit):
+    queue = Queue()
+    queue.put(1)  # Bắt đầu từ số 1
+
+    square_numbers = []
+
+    while len(square_numbers) < limit:
+        current_num = queue.get()
+        if is_square_number(current_num):
+            square_numbers.append(current_num)
+
+        # Thêm các trạng thái kế tiếp vào hàng đợi
+        queue.put(current_num + 1)
+        queue.put(current_num + 2)
+
+    return square_numbers
+
+limit = 10
+result = bfs_square_numbers(limit)
+print("10 số chính phương đầu tiên là:", result)

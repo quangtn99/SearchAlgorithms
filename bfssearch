@@ -1,0 +1,40 @@
+def bfs_search(graph, start, target):
+    visited = set()
+    queue = [[start]]
+
+    if start == target:
+        return "Đã tìm thấy từ cần tìm: " + start
+
+    while queue:
+        path = queue.pop(0)
+        node = path[-1]
+
+        if node not in visited:
+            neighbors = graph[node]
+            for neighbor in neighbors:
+                new_path = list(path)
+                new_path.append(neighbor)
+                queue.append(new_path)
+
+                if neighbor == target:
+                    return "Đã tìm thấy từ cần tìm: " + ' -> '.join(new_path)
+
+            visited.add(node)
+
+    return "Không tìm thấy từ trong từ điển."
+
+# Ví dụ từ điển dạng đồ thị
+dictionary = {
+    'apple': ['ample', 'apply'],
+    'ample': ['apple', 'ample'],
+    'apply': ['apple'],
+    'banana': ['banana'],
+    'cherry': ['cherry', 'cheery'],
+    'cheery': ['cherry']
+}
+
+start_word = 'apple'
+target_word = 'cherry'
+
+result = bfs_search(dictionary, start_word, target_word)
+print(result)

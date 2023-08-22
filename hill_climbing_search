@@ -1,0 +1,57 @@
+def hill_climbing_search(initial_state, is_goal_state, generate_neighbors, evaluate):
+    # Khởi tạo danh sách L chỉ chứa trạng thái ban đầu
+    L = [initial_state]
+
+    while True:
+        # Nếu L rỗng thì thông báo thất bại và dừng
+        if not L:
+            print("Không tìm thấy trạng thái kết thúc.")
+            break
+
+        # Loại trạng thái u ở đầu danh sách L
+        u = L.pop(0)
+
+        # Nếu u là trạng thái kết thúc thì thông báo thành công và dừng
+        if is_goal_state(u):
+            print("Đã tìm thấy trạng thái kết thúc.")
+            break
+
+        # Tạo danh sách L1 chứa các trạng thái v kề u
+        L1 = [v for v in generate_neighbors(u)]
+
+        # Sắp xếp L1 theo thứ tự tăng dần của hàm đánh giá
+        L1.sort(key=lambda v: evaluate(v))
+
+        # Chuyển danh sách L1 vào đầu danh sách L
+        L = L1 + L
+
+# Hàm kiểm tra trạng thái có phải là trạng thái kết thúc hay không
+def is_goal_state(state):
+    # Giả sử trạng thái kết thúc là 'goal_state'
+    goal_state = ...
+    return state == goal_state
+
+# Hàm sinh trạng thái kề của một trạng thái
+def generate_neighbors(state):
+    neighbors = []
+    # Các bước sinh trạng thái kề của 'state'
+    # Ví dụ:
+    neighbor1 = ...
+    neighbor2 = ...
+    neighbors.append(neighbor1)
+    neighbors.append(neighbor2)
+    return neighbors
+
+# Hàm đánh giá mức độ tốt của một trạng thái
+def evaluate(state):
+    # Giả sử hàm đánh giá là 'evaluation_function'
+    evaluation = evaluation_function(state)
+    return evaluation
+
+# Trạng thái ban đầu
+initial_state = ...
+
+# Triển khai các hàm 'is_goal_state', 'generate_neighbors', 'evaluate' và 'evaluation_function'
+
+# Triển khai thuật toán tìm kiếm Hill Climbing
+hill_climbing_search(initial_state, is_goal_state, generate_neighbors, evaluate)

@@ -1,0 +1,10 @@
+def tower_of_hanoi(n, source, target, auxiliary):
+    if n == 1:
+        print("Di chuyển đĩa 1 từ cọc", source, "sang cọc", target)
+        return
+    tower_of_hanoi(n-1, source, auxiliary, target)
+    print("Di chuyển đĩa", n, "từ cọc", source, "sang cọc", target)
+    tower_of_hanoi(n-1, auxiliary, target, source)
+
+# Gọi hàm để giải bài toán tháp Hà Nội với 3 đĩa
+tower_of_hanoi(4, 'A', 'C', 'B')

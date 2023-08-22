@@ -1,0 +1,42 @@
+def depth_first_search(graph, start, target):
+    stack = [(start, [start])]  # Lưu trữ các trạng thái và đường đi tương ứng
+    visited = set()  # Tập hợp các trạng thái đã được khám phá
+
+    while stack:
+        (current, path) = stack.pop()  # Lấy trạng thái và đường đi từ stack
+
+        if current == target:
+            return path  # Trả về đường đi nếu đạt được trạng thái kết thúc
+
+        if current not in visited:
+            visited.add(current)  # Đánh dấu trạng thái là đã khám phá
+
+            # Thêm các trạng thái kề chưa được khám phá vào stack
+            for neighbor in graph[current]:
+                stack.append((neighbor, path + [neighbor]))
+
+    return []  # Trả về danh sách rỗng nếu không tìm thấy đường đi
+
+
+# Xây dựng đồ thị biểu diễn các trạng thái và liên kết giữa chúng
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F', 'G'],
+    'D': [],
+    'E': ['H'],
+    'F': [],
+    'G': ['T'],
+    'H': [],
+    'T': []
+}
+
+start_state = 'A'  # Trạng thái ban đầu
+target_state = 'T'  # Trạng thái kết thúc
+
+path = depth_first_search(graph, start_state, target_state)
+
+if path:
+    print("Đường đi từ", start_state, "đến", target_state, ":", path)
+else:
+    print("Không tìm thấy đường đi từ", start_state, "đến", target_state)
